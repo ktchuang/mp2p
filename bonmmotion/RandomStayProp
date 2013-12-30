@@ -1,7 +1,7 @@
 #for ManhattanGrid
 NUM_STAY_POINT = 100
-MAX_STAY_TIME = 10
-STAY_PROB = 0.8
+MAX_STAY_TIME = 100
+STAY_PROB = 0.5
 STAY_REGION_SQUARE = 25
 #for RandomStreet
 #==========================Map Info========================

@@ -40,6 +40,25 @@ public class RandomStayPoint {
 		  stayTime[i] = rv_t.nextDouble() * MAX_STAY_TIME;
 	  }
     } 
+    
+    public double getStayTime_Vertex(Position loc) {
+    	double ret = 0;
+    	boolean stay = false;
+    	int i = 0;
+    	Random rv_t = new Random();
+    	while (i<NUM_STAY_POINT && !stay) {
+    		if (((Math.pow((loc.x-stayPos[i].x), 2)) + (Math.pow((loc.y-stayPos[i].y), 2))) 
+    				<= 0.1) {
+    			if (rv_t.nextDouble() <= STAY_PROB) {
+    				stay = true;
+    				ret = stayTime[i];
+    			}
+    		}
+    		i++;
+    	}
+    	return ret;
+    }
+    
     public double getStayTime(Position loc) {
     	double ret = 0;
     	boolean stay = false;

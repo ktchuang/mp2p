@@ -136,11 +136,14 @@ out:    for (int i = 0; i < node.length; i++)
 
             while (t < duration)
             {
-                if (maxPause > 0.0)
-                {
-                    double pause = maxPause * randomNextDouble();
-                    t += pause;
-                }
+            	/**
+            	 * NEW CODE
+            	 */
+                //if (maxPause > 0.0)
+                //{
+                //    double pause = maxPause * randomNextDouble();
+                //    t += pause;
+                //}
 
                 Position[] route = null;
                 int numIterations = 0;
@@ -172,7 +175,7 @@ out:    for (int i = 0; i < node.length; i++)
                 }
 
                 // add route to waypoint list (drive to destination)
-                t = addRoute(node[i], t, route);
+                t = addRoute(node[i], i, t, route);
             }
             System.out.println("Node " + (i + 1) + " of " + node.length + " done.");
         }
@@ -400,7 +403,7 @@ out:    for (int i = 0; i < node.length; i++)
         }
     }
 
-    private double addRoute(MobileNode node,
+    private double addRoute(MobileNode node, int index,
                             double t,
                             Position[] route)
     {
@@ -409,32 +412,26 @@ out:    for (int i = 0; i < node.length; i++)
         for (int i = 0; i < route.length; i++)
         {
             dst = route[i];
-
-			/**
-			 * NEW CODE: Let the dest replicated to behave as a "stay"
-			 */
-			/*
-            if (t < duration) {
-		  	  double stay = STAYPOINT.getStayTime(dst);
-			  if (stay > 0) {
-				t += stay;
-				node[i].add(t, dst);
-				if (!hasStay) {
-					hasStay=true;
-					System.out.print("\nNode "+i+" Stay at"+dst.toString() + " as "+(int)stay+" sec");
-				}
-				else {
-				  System.out.print(", " + dst.toString()+ " as "+(int)stay+" sec");
-				}
-			  }
-			}
-			*/	
-			
+		
             double speed = (maxSpeed - minSpeed) * randomNextDouble() + minSpeed;
             double dist = src.distance(dst);
             double time = dist / speed;
             t += time;
             addWaypoint(node, t, dst);
+			
+            /**
+			 * NEW CODE: Let the dest replicated to behave as a "stay"
+			 */
+			
+            if (t < duration) {
+		  	  double stay = STAYPOINT.getStayTime_Vertex(dst);
+			  if (stay > 0) {				
+				t += stay;
+				System.out.println("Node "+index+" has stay at time "+t+" ("+dst.x+","+dst.y+") for "+stay+" sec");
+	            addWaypoint(node, t, dst);	            				
+			  }
+			}
+				            
             if (t >= duration)
                 return t;
             
