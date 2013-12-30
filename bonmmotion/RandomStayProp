@@ -1,0 +1,16 @@
+#for ManhattanGrid
+NUM_STAY_POINT = 100
+MAX_STAY_TIME = 10
+STAY_PROB = 0.8
+STAY_REGION_SQUARE = 25
+#for RandomStreet
+#==========================Map Info========================
+#sanfrancisco height=2252.29, width=2415.6800000000003
+#tokyo height=2125.92, width=2325.1499999999996
+#Manhattan 2399.1800000000003, width=2380.86
+#venice 2224.97, width=2223.2999999999997
+#newdehli2 4517.5199999999995, width=4508.239999999998
+#==========================Map Info========================
+WKT_MAP_FILE_NAME = map/newdehli2.wkt
+MAP_MAX_SPEED = 1.5
+MAP_MIN_SPEED = 0.5

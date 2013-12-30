@@ -1,0 +1,9 @@
+model=RandomStreet
+ignore=10000.0
+randomSeed=1388325997420
+x=2325.1499999999996
+y=2125.92
+duration=2000.0
+nn=5000
+circular=false
+paramFile=doc/RaSt_example/RaSt_parameter.txt
