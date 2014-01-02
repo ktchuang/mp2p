@@ -11,6 +11,6 @@ STAY_REGION_SQUARE = 25
 #venice 2224.97, width=2223.2999999999997
 #newdehli2 4517.5199999999995, width=4508.239999999998
 #==========================Map Info========================
-WKT_MAP_FILE_NAME = map/newdehli2.wkt
+WKT_MAP_FILE_NAME = map/sanfrancisco.wkt
 MAP_MAX_SPEED = 1.5
 MAP_MIN_SPEED = 0.5
