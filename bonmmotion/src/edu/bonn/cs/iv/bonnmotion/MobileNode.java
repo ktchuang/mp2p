@@ -164,6 +164,7 @@ public class MobileNode {
             Waypoint w = waypoints.elementAt(i);
             if (w.pos.x>2000 || w.pos.y>2000) {
             	System.out.println("ERROR!!"+w.pos.toString());
+            	System.exit(0);
             }
             sb.append(" ");
             sb.append(w.getMovementStringPart());
