@@ -162,6 +162,9 @@ public class MobileNode {
         StringBuffer sb = new StringBuffer(100 * waypoints.size());
         for (int i = 0; i < waypoints.size(); i++) {
             Waypoint w = waypoints.elementAt(i);
+            if (w.pos.x>2000 || w.pos.y>2000) {
+            	System.out.println("ERROR!!"+w.pos.toString());
+            }
             sb.append(" ");
             sb.append(w.getMovementStringPart());
         }

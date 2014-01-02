@@ -277,6 +277,9 @@ public class ManhattanGrid extends Scenario {
 			  	  double stay = STAYPOINT.getStayTime(dst);
 				  if (stay > 0) {
 					t += stay;
+					if (outOfBounds(dst)) {
+					  System.out.println("ERROR:"+dst.toString());
+					}
 					node[i].add(t, dst);
 					if (!hasStay) {
 						hasStay=true;
