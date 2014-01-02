@@ -27,6 +27,7 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import osm2wkt.Osm2Wkt.Landmark;
 import edu.bonn.cs.iv.bonnmotion.BoundingBox;
 import edu.bonn.cs.iv.bonnmotion.HttpMapRequest;
 import edu.bonn.cs.iv.bonnmotion.MobileNode;
@@ -35,6 +36,8 @@ import edu.bonn.cs.iv.bonnmotion.Position;
 import edu.bonn.cs.iv.bonnmotion.Scenario;
 import edu.bonn.cs.iv.bonnmotion.Waypoint;
 import edu.bonn.cs.iv.bonnmotion.HttpMapRequest.ORSStartPositionFailedException;
+import edu.bonn.cs.iv.bonnmotion.models.randomstay.RandomStayPoint;
+import edu.bonn.cs.iv.bonnmotion.models.randomstay.WKT2GraphMap;
 import edu.bonn.cs.iv.bonnmotion.models.slaw.Cluster;
 import edu.bonn.cs.iv.bonnmotion.models.slaw.ClusterMember;
 import edu.bonn.cs.iv.bonnmotion.models.slaw.SLAWBase;
@@ -45,6 +48,11 @@ import edu.bonn.cs.iv.util.maps.CoordinateTransformation.proj4lib;
 
 public class MSLAW extends SLAWBase {
     private static ModuleInfo info;
+	/**
+	 * NEW CODE: Let the dest replicated to behave as a "stay"
+	 */
+	public static RandomStayPoint STAYPOINT = new RandomStayPoint();
+    public static WKT2GraphMap graph = null;
     
     static {
         info = new ModuleInfo("MSLAW");
@@ -89,10 +97,12 @@ public class MSLAW extends SLAWBase {
 
     public MSLAW(int nodes, double x, double y, double duration, double ignore, long randomSeed) {
         super(nodes, x, y, duration, ignore, randomSeed);
+    	graph = new WKT2GraphMap();
         generate();
     }
 
     public MSLAW(String[] args) {
+    	graph = new WKT2GraphMap();
         go(args);
     }
 
@@ -240,6 +250,12 @@ public class MSLAW extends SLAWBase {
     }
 
     private Position find_routable_position() {
+      Object[] lm = graph.landmark.keySet().toArray();
+      int node = (int)Math.random()*lm.length;
+      Landmark l=graph.landmark.get((Long)lm[node]);
+      return new Position(l.x, l.y);
+    }
+    private Position find_routable_position_old() {
         double xx, yy;
         Position src = null, dst = null;
 
@@ -254,7 +270,7 @@ public class MSLAW extends SLAWBase {
 
             Position[] route = null;
             try {
-                route = HttpMapRequest.getORSRouteWaypoints(src, dst, epsgCode, orsDistMetric, orsUrl);
+                route = graph.getORSRouteWaypoints(src, dst, epsgCode, orsDistMetric, orsUrl);
                 if (route != null) {
                     break;
                 }
@@ -268,7 +284,12 @@ public class MSLAW extends SLAWBase {
 
     public void generate() {
         preGeneration();
-
+        
+		/**
+		 * NEW CODE: Let the dest replicated to behave as a "stay"
+		 */
+		STAYPOINT.init_vertics(graph);
+		
         if (isTransition) {
             System.out.println("Warning: Ignoring transition...");
         }
@@ -360,7 +381,7 @@ out:    for (int user = 0; user < node.length; user++) {
                             int num = 0;
                             while (num < maxORSRequestIterations) {
 
-                                dist[i] = HttpMapRequest.getORSRouteDistance(source, not_visited[i].pos, epsgCode, orsDistMetric, orsUrl);
+                                dist[i] = graph.getORSRouteDistance(source, not_visited[i].pos, epsgCode, orsDistMetric, orsUrl);
                                 if (dist[i] != -1) {
                                     break;
                                 }
@@ -425,7 +446,7 @@ out:    for (int user = 0; user < node.length; user++) {
                     
                     try { 
                         // get route waypoints by querying OpenRouteService
-                        route = HttpMapRequest.getORSRouteWaypoints(source, destination, epsgCode, orsDistMetric, orsUrl);
+                        route = graph.getORSRouteWaypoints(source, destination, epsgCode, orsDistMetric, orsUrl);
                     } catch (ORSStartPositionFailedException e) {
                         if (DEBUG) {
                             System.err.println(e.getMessage());
@@ -552,10 +573,10 @@ out:    for (int user = 0; user < node.length; user++) {
             }
         }
 
-        double failedORSRequests = HttpMapRequest.countFailedORSRequests / (double)HttpMapRequest.countORSRequests;
-        DecimalFormat df = new DecimalFormat("###.##%");
-        System.out.println("\n#OSM queries = " + HttpMapRequest.countOSMQueries + " | #ORS requests = " + HttpMapRequest.countORSRequests
-                + " (" + df.format(failedORSRequests) + " failed)");
+//        double failedORSRequests = HttpMapRequest.countFailedORSRequests / (double)HttpMapRequest.countORSRequests;
+//        DecimalFormat df = new DecimalFormat("###.##%");
+//        System.out.println("\n#OSM queries = " + HttpMapRequest.countOSMQueries + " | #ORS requests = " + HttpMapRequest.countORSRequests
+//                + " (" + df.format(failedORSRequests) + " failed)");
 
         if (logFile != null)
             mywrite();
@@ -599,12 +620,15 @@ out:    for (int user = 0; user < node.length; user++) {
                     if (margin > 1)
                         System.out.println("Warning: margin is > 1, are you sure you want to add a margin with size > 100% of the original bounding box?");
 
-                    mapBBox = new BoundingBox(left, bottom, right, top);
-
-                    double marginX = mapBBox.width() * margin * 0.5;
-                    double marginY = mapBBox.height() * margin * 0.5;
-                    routeBBox = new BoundingBox(left - marginX, bottom - marginY, right + marginX, top + marginY);
-
+                    /**
+                     * ktchuang
+                     */                    
+                    mapBBox = new BoundingBox(graph.mapBBox.left, graph.mapBBox.bottom, graph.mapBBox.right, graph.mapBBox.top);
+                    routeBBox = new BoundingBox(graph.mapBBox.left, graph.mapBBox.bottom, graph.mapBBox.right, graph.mapBBox.top);
+                    //double marginX = mapBBox.width()*margin*0.5;
+                    //double marginY = mapBBox.height()*margin*0.5;
+                    //routeBBox = new BoundingBox(left - marginX, bottom - marginY, right + marginX, top + marginY);
+                    
                     if (DEBUG)
                         System.out.println("DEBUG: routeBBox = (" + routeBBox.origin().x + ", " + routeBBox.origin().y + ", "
                                 + (routeBBox.origin().x + routeBBox.width()) + ", " + (routeBBox.origin().y + routeBBox.height()) + ")");
@@ -780,8 +804,22 @@ out:    for (int user = 0; user < node.length; user++) {
         Position origin = routeBBox.origin();
         return new Position(origin.x + scenarioPosition.x, origin.y + scenarioPosition.y);
     }
-
+    /**
+     * ktchuang
+     * @return
+     */
     private Position randomNextMapPosition(double Xoffset, double Yoffset, double Xwind, double Ywind, boolean is_ignore,
+            Position routable_point, Vector<Position> waypoints)
+    {
+    	Position ret;
+    	Long index = (long)((randomNextDouble() * graph.getVertexCount())); 
+    	double x= graph.getVertexX(index);
+    	double y= graph.getVertexY(index);
+    	ret = new Position(x,y);
+    	return ret;
+    	
+    }
+    private Position randomNextMapPosition_old(double Xoffset, double Yoffset, double Xwind, double Ywind, boolean is_ignore,
             Position routable_point, Vector<Position> waypoints) {
 
         double theta = 2 * Math.PI * randomNextDouble();
@@ -808,7 +846,7 @@ out:    for (int user = 0; user < node.length; user++) {
 
             if (!waypoints.contains(result)) {
                 try {
-                    route = HttpMapRequest.getORSRouteWaypoints(result, routable_point, epsgCode, orsDistMetric, orsUrl);
+                    route = graph.getORSRouteWaypoints(result, routable_point, epsgCode, orsDistMetric, orsUrl);
                 } catch (ORSStartPositionFailedException e) {
                     route = null;
                 }

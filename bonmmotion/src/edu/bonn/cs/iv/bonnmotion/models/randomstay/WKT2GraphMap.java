@@ -43,7 +43,7 @@ public class WKT2GraphMap {
     public static double MAP_MAX_SPEED;
     public static double MAP_MIN_SPEED;
     public WeightedPseudograph<Long, DefaultWeightedEdge> graph = null;
-    HashMap<Long,Landmark> landmark;
+    public HashMap<Long,Landmark> landmark;
     public BoundingBox mapBBox = null;
 	public WKT2GraphMap() {
 		Osm2Wkt obj = new Osm2Wkt();
@@ -126,6 +126,26 @@ public class WKT2GraphMap {
       return ret;
   }
 
+  /**
+  *
+  * @param src
+  * @param dst
+  * @param epsgCode
+  * @param pref
+  * @param ors_url
+  * @return
+  */
+  public double getORSRouteDistance(Position src,
+                                          Position dst,
+                                          int epsgCode,
+                                          String pref,
+                                          String ors_url)
+  {
+	  	Long s = getVertexID(src.x,src.y);
+	  	Long d = getVertexID(dst.x,dst.y);
 
+	  	DijkstraShortestPath alg = new DijkstraShortestPath(graph, s, d);
+	  	return alg.getPathLength();
+  }
 
 }

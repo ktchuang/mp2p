@@ -1,9 +1,9 @@
-model=RandomStreet
-ignore=10000.0
-randomSeed=1388659511325
-x=4508.239999999998
-y=4517.5199999999995
-duration=2000.0
-nn=1000
+model=MSLAW
+ignore=5000.0
+randomSeed=1388683301652
+x=2415.6800000000003
+y=2252.29
+duration=1000.0
+nn=100
 circular=false
-paramFile=doc/RaSt_example/RaSt_parameter.txt
+paramFile=doc/MSLAW_example/MSLAW_parameter.txt
