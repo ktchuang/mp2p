@@ -30,6 +30,7 @@ import edu.bonn.cs.iv.bonnmotion.BoundingBox;
 import edu.bonn.cs.iv.bonnmotion.HttpMapRequest;
 import edu.bonn.cs.iv.bonnmotion.Position;
 import edu.bonn.cs.iv.bonnmotion.HttpMapRequest.ORSStartPositionFailedException;
+import edu.bonn.cs.iv.bonnmotion.Scenario;
 import edu.bonn.cs.iv.bonnmotion.models.RandomStreet;
 import edu.bonn.cs.iv.graph.Edge;
 
@@ -45,7 +46,7 @@ public class WKT2GraphMap {
     public WeightedPseudograph<Long, DefaultWeightedEdge> graph = null;
     public HashMap<Long,Landmark> landmark;
     public BoundingBox mapBBox = null;
-	public WKT2GraphMap() {
+	public WKT2GraphMap(Scenario scenario) {
 		Osm2Wkt obj = new Osm2Wkt();
 		
 		if(!obj.readWkt(WKT_MAP_FILE_NAME)) 						return;
@@ -71,6 +72,11 @@ public class WKT2GraphMap {
 			if(m.y>maxY) maxY=m.y;			
         }
 		mapBBox = new BoundingBox(minX,minY,maxX,maxY);
+		scenario.transform_x = minX;
+		scenario.transform_y = minY;
+		scenario.max_trace_x = maxX;
+		scenario.max_trace_y = maxY;
+		
 		System.out.println(WKT_MAP_FILE_NAME + " map: bbox's height="+(maxY-minY)+", width="+(maxX-minX));
 	}
 	public long getVertexCount() {

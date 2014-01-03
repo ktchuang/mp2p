@@ -97,12 +97,12 @@ public class MSLAW extends SLAWBase {
 
     public MSLAW(int nodes, double x, double y, double duration, double ignore, long randomSeed) {
         super(nodes, x, y, duration, ignore, randomSeed);
-    	graph = new WKT2GraphMap();
+    	graph = new WKT2GraphMap(this);
         generate();
     }
 
     public MSLAW(String[] args) {
-    	graph = new WKT2GraphMap();
+    	graph = new WKT2GraphMap(this);
         go(args);
     }
 

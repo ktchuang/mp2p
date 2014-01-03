@@ -31,6 +31,14 @@ public class Scenario extends App implements Model, ScenarioLink {
     protected boolean isTransition = false;
     protected int transitionMode = 0;
     protected Scenario predecessorScenario = null;
+    
+    /**
+     * NEW CODE
+     */
+    public double transform_x = 0;
+    public double transform_y = 0;
+    public double max_trace_x = 0;
+    public double max_trace_y = 0;
 
     /** caches movements from last read(basename). null if read(basename) was not executed yet */
     public String movements = null;
@@ -645,7 +653,11 @@ public class Scenario extends App implements Model, ScenarioLink {
 				info.print("," + aFieldParams[i]);
 			info.println("");
 		}
-
+        info.println("Map Transform X:"+this.transform_x);
+        info.println("Map Transform Y:"+this.transform_y);
+        info.println("Trace Max X:"+this.max_trace_x);
+        info.println("Trace Max Y:"+this.max_trace_y);
+        
 		info.close();
 		PrintWriter movements =	new PrintWriter(new GZIPOutputStream(new FileOutputStream(basename + ".movements.gz")));
 
@@ -689,7 +701,11 @@ public class Scenario extends App implements Model, ScenarioLink {
 				info.print("," + aFieldParams[i]);
 			info.println("");
 		}
-
+        info.println("Map Transform X:"+this.transform_x);
+        info.println("Map Transform Y:"+this.transform_y);
+        info.println("Trace Max X:"+this.max_trace_x);
+        info.println("Trace Max Y:"+this.max_trace_y);
+        
 		info.close();
 		PrintWriter movements = new PrintWriter(new GZIPOutputStream(new FileOutputStream(basename + ".movements.gz")));
 		for (int i = 0; i < node.length; i++) {

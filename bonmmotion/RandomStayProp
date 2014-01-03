@@ -3,7 +3,7 @@ NUM_STAY_POINT = 100
 MAX_STAY_TIME = 100
 STAY_PROB = 0.5
 STAY_REGION_SQUARE = 25
-#for RandomStreet
+#for RandomStreet and MSLAW
 #==========================Map Info========================
 #sanfrancisco height=2252.29, width=2415.6800000000003
 #tokyo height=2125.92, width=2325.1499999999996

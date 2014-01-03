@@ -2,4 +2,5 @@
 -f trace ManhattanGrid -d 2000 -i 10000 -n 1000 -x 2000 -y 2000 -c 0.25 -e 0.5 -m 1 -o 1.5 -p 0.5 -t 0.25 -u 70 -v 80
 #Random Street
 -f trace RandomStreet -d 2000 -i 10000 -x 2000 -y 2000 -n 1000 -p doc/RaSt_example/RaSt_parameter.txt
+#MSLAW
 -f trace MSLAW -d 2000 -i 10000 -n 1000 -x 2000 -y 2000 -p doc/MSLAW_example/MSLAW_parameter.txt

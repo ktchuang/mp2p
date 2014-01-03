@@ -1,9 +1,13 @@
 model=MSLAW
 ignore=5000.0
-randomSeed=1388683301652
+randomSeed=1388756300781
 x=2415.6800000000003
 y=2252.29
 duration=1000.0
 nn=100
 circular=false
 paramFile=doc/MSLAW_example/MSLAW_parameter.txt
+Map Transform X:2623.79
+Map Transform Y:1373.67
+Trace Max X:5039.47
+Trace Max Y:3625.96

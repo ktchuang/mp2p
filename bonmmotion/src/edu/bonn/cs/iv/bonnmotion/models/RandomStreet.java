@@ -104,7 +104,7 @@ public class RandomStreet extends Scenario
 
     public RandomStreet(String[] args)
     {
-    	graph = new WKT2GraphMap();
+    	graph = new WKT2GraphMap(this);
         go(args);
     }
 
