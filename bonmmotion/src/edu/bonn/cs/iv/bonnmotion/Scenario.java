@@ -227,6 +227,7 @@ public class Scenario extends App implements Model, ScenarioLink {
 
             if (key.equals("z")) {
                 return true;
+                
             }
         }
         in.close();
@@ -653,10 +654,10 @@ public class Scenario extends App implements Model, ScenarioLink {
 				info.print("," + aFieldParams[i]);
 			info.println("");
 		}
-        info.println("Map Transform X:"+this.transform_x);
-        info.println("Map Transform Y:"+this.transform_y);
-        info.println("Trace Max X:"+this.max_trace_x);
-        info.println("Trace Max Y:"+this.max_trace_y);
+        info.println("Map Transform X="+this.transform_x);
+        info.println("Map Transform Y="+this.transform_y);
+        info.println("Trace Max X="+this.max_trace_x);
+        info.println("Trace Max Y="+this.max_trace_y);
         
 		info.close();
 		PrintWriter movements =	new PrintWriter(new GZIPOutputStream(new FileOutputStream(basename + ".movements.gz")));
